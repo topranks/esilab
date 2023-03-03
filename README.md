@@ -12,9 +12,11 @@ Vlan100 is stretched across all LEAF devices using VXLAN.  All switches have an 
 
 ### ESI-LAG
 
-When the automation runs the ESI-LAG is built between LEAF1 and LEAF2, and in the output you can see it working
+When the automation runs the ESI-LAG is built between LEAF1 and LEAF2, and in the output you can see it working.
 
-LEAF1
+Connected device SERVER has its ae0 interface configured as a routed interface with IP 198.18.100.101, its MAC is 02:05:86:72:c9:ef.
+
+LEAF1:
 ```
 cathal@LEAF1> show evpn database esi 00:00:00:00:01:02:00:00:00:01 extensive 
 Instance: default-switch
@@ -28,26 +30,22 @@ VN Identifier: 100000, MAC address: 02:05:86:72:c9:ef
     Timestamp: Mar 02 23:40:39 (0x640133f7)
     State: <Local-MAC-Only Local-To-Remote-Adv-Allowed>
     MAC advertisement route status: Created
-    IP address: 198.18.100.100
-      Local origin: ae0.0
-      Remote origin: 12.12.12.12
-      L3 route: 198.18.100.100/32, L3 context: WMF_PROD (irb.100)
     IP address: 198.18.100.101
       Local origin: ae0.0
       Remote origin: 12.12.12.12
       L3 route: 198.18.100.101/32, L3 context: WMF_PROD (irb.100)
     History db: 
       Time                  Event
-      Mar  2 23:36:40 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.100 Selected IRB interface nexthop
-      Mar  2 23:36:40 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.100 Reject remote ip host route 198.18.100.100 in L3 context WMF_PROD since no remote-ip-host-routes configured
-      Mar  2 23:36:44 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.100 Selected IRB interface nexthop
-      Mar  2 23:40:37 2023  00:00:00:00:01:02:00:00:00:01 : Updating output state (change flags 0x801 <Intf IP-Added>)
-      Mar  2 23:40:37 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.101 Selected IRB interface nexthop
       Mar  2 23:40:37 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.100 Selected IRB interface nexthop
       Mar  2 23:40:37 2023  00:00:00:00:01:02:00:00:00:01 : Updating output state (change flags 0x80 <ESI-Local-State>)
       Mar  2 23:40:38 2023  00:00:00:00:01:02:00:00:00:01 : Updating output state (change flags 0x400000000 <ESI-Remote-Peer-Com-Chg>)
       Mar  2 23:40:38 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.100 Selected IRB interface nexthop
       Mar  2 23:40:38 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.101 Selected IRB interface nexthop
+      Mar  2 23:46:43 2023  00:00:00:00:01:02:00:00:00:01 : Updating output state (change flags 0x400000000 <ESI-Remote-Peer-Com-Chg>)
+      Mar  2 23:46:43 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.100 Selected IRB interface nexthop
+      Mar  2 23:46:43 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.101 Selected IRB interface nexthop
+      Mar  2 23:46:52 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.100 Deleting
+      Mar  2 23:46:52 2023  00:00:00:00:01:02:00:00:00:01 : Updating output state (change flags 0x1000 <IP-Deleted>)
 
 {master:0}
 cathal@LEAF1> show lacp interfaces extensive 
@@ -77,28 +75,23 @@ VN Identifier: 100000, MAC address: 02:05:86:72:c9:ef
     Timestamp: Mar 02 23:40:38 (0x640133f6)
     State: <Local-MAC-Only Local-To-Remote-Adv-Allowed>
     MAC advertisement route status: Created
-    IP address: 198.18.100.100
-      Local origin: ae0.0
-      Remote origin: 11.11.11.11
-      L3 route: 198.18.100.100/32, L3 context: WMF_PROD (irb.100)
     IP address: 198.18.100.101
       Local origin: ae0.0
       Remote origin: 11.11.11.11
       L3 route: 198.18.100.101/32, L3 context: WMF_PROD (irb.100)
     History db: 
       Time                  Event
-      Mar  2 23:36:40 2023  00:00:00:00:01:02:00:00:00:01 : Created
-      Mar  2 23:36:40 2023  Updating output state (change flags 0x20 <ESI-Added>)
-      Mar  2 23:36:40 2023  Active ESI changing (not assigned -> 00:00:00:00:01:02:00:00:00:01)
-      Mar  2 23:36:40 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.100 Selected IRB interface nexthop
       Mar  2 23:36:40 2023  00:00:00:00:01:02:00:00:00:01 : Updating output state (change flags 0x80 <ESI-Local-State>)
       Mar  2 23:40:38 2023  00:00:00:00:01:02:00:00:00:01 : Remote peer 11.11.11.11 created
       Mar  2 23:40:38 2023  00:00:00:00:01:02:00:00:00:01 : Updating output state (change flags 0x400000a00 <ESI-Peer-Added IP-Added ESI-Remote-Peer-Com-Chg>)
       Mar  2 23:40:38 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.100 Selected IRB interface nexthop
       Mar  2 23:40:38 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.101 Selected IRB interface nexthop
       Mar  2 23:40:38 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.101 Selected IRB interface nexthop
+      Mar  2 23:46:43 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.100 Selected IRB interface nexthop
+      Mar  2 23:46:53 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.100 Deleting
+      Mar  2 23:46:53 2023  00:00:00:00:01:02:00:00:00:01 : Updating output state (change flags 0x400001000 <IP-Deleted ESI-Remote-Peer-Com-Chg>)
+      Mar  2 23:46:53 2023  00:00:00:00:01:02:00:00:00:01 : 198.18.100.101 Selected IRB interface nexthop
 
-{master:0}
 cathal@LEAF2> show lacp interfaces extensive 
 Aggregated interface: ae0
     LACP state:       Role   Exp   Def  Dist  Col  Syn  Aggr  Timeout  Activity
@@ -112,7 +105,7 @@ Aggregated interface: ae0
       xe-0/0/2     Partner        127  02:05:86:71:ce:00        127        2       1
 ```
 
-And all looks ok on SERVER1 (configured with standard LAG across 2 local ports):
+LAG looks ok on SERVER1 (standard LAG across 2 local ports):
 ```
 cathal@SERVER1> show lacp interfaces extensive 
 Aggregated interface: ae0
